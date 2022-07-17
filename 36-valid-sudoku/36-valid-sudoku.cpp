@@ -1,47 +1,44 @@
 class Solution {
-public:
-	bool isSquare(vector<vector<char>> &board, int row, int column) {
-		vector<char> v {};
-		set<char> se {};
-		for(int i = row; i < row + 3; i++) {
-			for(int j = column; j < column + 3; j++) {
-				if(board[i][j] != '.') {
-					se.insert(board[i][j]);
-					v.push_back(board[i][j]);
-				}
-			}
-		}
-		if(se.size() != v.size()) return false;
-		return true;
-	}
-	bool isValidSudoku(vector<vector<char>>& board) {
-		for(int i = 0; i < 9; i++) {
-			vector<char> v {};
-			set<char> se {};
-			for(int j = 0; j < 9; j++) {
-				if(board[i][j] != '.') {
-					se.insert(board[i][j]);
-					v.push_back(board[i][j]);
-				}
-			}
-			if(se.size() != v.size()) return false;
-		}
-		for(int j = 0; j < 9; j++) {
-			vector<char> v {};
-			set<char> se {};
-			for(int i = 0; i < 9; i++) {
-				if(board[i][j] != '.') {
-					se.insert(board[i][j]);
-					v.push_back(board[i][j]);
-				}
-			}
-			if(se.size() != v.size()) return false;
-		}
-		for(int i = 0; i < 9; i += 3) {
-			for(int j = 0; j < 9; j += 3) {
-				if(isSquare(board, i, j) == false) return false;
-			}
-		}
-		return true;
-	}
+    public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+    unordered_set<char> s;
+    char ch;
+    for(int i = 0; i < 9; ++i) {
+        s.clear();
+        for(int j = 0; j < 9; ++j) {
+            ch = board[i][j];
+            if(ch != '.') {
+                if(s.find(ch) != s.end())
+                    return false;
+                s.insert(ch);
+            }
+        }
+    }
+    for(int i = 0; i < 9; ++i) {
+        s.clear();
+        for(int j = 0; j < 9; ++j) {
+            ch = board[j][i];
+            if(ch != '.') {
+                if(s.find(ch) != s.end())
+                    return false;
+                s.insert(ch);
+            }
+        }
+    }
+    for(int i = 0; i < 9; i += 3) {
+        for(int j = 0; j < 9; j += 3) {
+            s.clear();
+            for(int r = i; r < i + 3; ++r)
+                for(int c = j; c < j + 3; ++c) {
+                    ch = board[r][c];
+                    if(ch != '.') {
+                        if(s.find(ch) != s.end())
+                            return false;
+                        s.insert(ch);
+                    }
+                }
+        }
+    }
+    return true;
+}
 };
