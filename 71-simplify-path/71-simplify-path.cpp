@@ -9,22 +9,20 @@ public:
             continue;
         tokens.push_back(token);
     }
-    stack<string> ans;
+    vector<string> ans;
     for(string t: tokens) {
         if(t == "..") {
             if(!ans.empty())
-                ans.pop();
+                ans.pop_back();
         }
         else
-            ans.push(t);
+            ans.push_back(t);
     }
-    path.clear();
-    while(!ans.empty()) {
-        path = "/" + ans.top() + path;
-        ans.pop();
-    }
-    if(path.empty())
+    if(ans.empty())
         return "/";
-    return path;
+    ostringstream oss;
+    for(string t: ans)
+        oss << "/" << t;
+    return oss.str();
 }
 };
