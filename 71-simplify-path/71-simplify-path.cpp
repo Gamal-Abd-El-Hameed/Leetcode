@@ -1,48 +1,27 @@
 class Solution {
 public:
     string simplifyPath(string path) {
-    stack<string> newPath;
-    int n = path.length(), i = 0;
-    char ch, secondChar;
-    while(i < n) {
-        ch = path[i];
-        if(ch == '.') {
-            string temp;
-            temp += ch;
-            ++i;
-            while(i < n) {
-                secondChar = path[i];
-                if(secondChar == '/')
-                    break;
-                temp += secondChar;
-                ++i;
-            }
-            if(temp == "..") {
-                if(!newPath.empty())
-                    newPath.pop();
-            }
-            else if(temp != ".")
-                newPath.push(temp);
+    istringstream iss(path);
+    vector<string> tokens;
+    string token;
+    while(getline(iss, token, '/')) {
+        if(token == "." || token == "")
+            continue;
+        tokens.push_back(token);
+    }
+    stack<string> ans;
+    for(string t: tokens) {
+        if(t == "..") {
+            if(!ans.empty())
+                ans.pop();
         }
-        else if(ch != '/') {
-            string temp;
-            temp += ch;
-            ++i;
-            while(i < n) {
-                secondChar = path[i];
-                if(secondChar == '/')
-                    break;
-                temp += secondChar;
-                ++i;
-            }
-            newPath.push(temp);
-        }
-        ++i;
+        else
+            ans.push(t);
     }
     path.clear();
-    while(!newPath.empty()) {
-        path = "/" + newPath.top() + path;
-        newPath.pop();
+    while(!ans.empty()) {
+        path = "/" + ans.top() + path;
+        ans.pop();
     }
     if(path.empty())
         return "/";
