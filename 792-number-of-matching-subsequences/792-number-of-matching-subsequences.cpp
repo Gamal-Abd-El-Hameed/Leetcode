@@ -1,36 +1,30 @@
 class Solution {
 public:
     int numMatchingSubseq(string s, vector<string>& words) {
-    unordered_map<string, int> wordsMap;
-    for(string word: words)
-        ++wordsMap[word];
-    unordered_map<char, int> sMap, wMap;
-    for(char ch: s)
-        ++sMap[ch];
-    int ans = 0, n = s.length(), m, i, j;
-    bool isSubset;
-    string word;
-    for(auto wordMap : wordsMap) {
-        word = wordMap.first;
-        wMap.clear();
-        isSubset = true;
-        for(char ch : word)
-            ++wMap[ch];
-        for(auto m : wMap)
-            if(m.second > sMap[m.first]) {
-                isSubset = false;
-                break;
-            }
-        if(!isSubset)
-            continue;
-        i = 0, j = 0, m = word.length();
-        while(i < n && j < m) {
-            if(s[i] == word[j]) ++j;
-            ++i;
+        vector<vector<int>> charMap(26);
+        int n = s.length();
+        
+        for(int i = 0; i < n; i++) {
+            charMap[s[i] - 'a'].push_back(i);
         }
-        if(j == m)
-            ans += wordMap.second;
+        
+        int ans = words.size();
+        
+        for(auto& word : words) {
+            int last = -1;
+            
+            for(char c : word) {
+                auto& cIndexes = charMap[c - 'a'];
+                auto it = upper_bound(cIndexes.begin(), cIndexes.end(), last);
+                if(it == cIndexes.end()) {
+                    ans--;
+                    break;
+                } else {
+                    last = *it;
+                }
+            }
+        }
+        
+        return ans;
     }
-    return ans;
-}
 };
