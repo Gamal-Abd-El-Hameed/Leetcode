@@ -1,25 +1,39 @@
 class Solution {
 public:
-    bool hasMatches(string &curr, string &s) {
-        int pos = 1;
-        int i = s.find(curr[0]);
-        if (i == -1)
-            return false;
-        while (pos < curr.length()) {
-            i = s.find(curr[pos], i + 1);
-            if (i == -1)
-                return false;
-            pos++;
+    int bs(vector<int> &arr, int x) {
+        int start = 0,end = arr.size()-1,ans = -1, mid;
+        while (start <= end) {
+            mid = (start + end) >> 1;
+
+            if (arr[mid] <= x)
+                start = mid + 1;
+            else {
+                ans = mid;
+                end = mid - 1;
+            }
         }
-        return true;
-    }
-    
+        return ans==-1 ? ans : arr[ans];
+    }    
+
     int numMatchingSubseq(string s, vector<string>& words) {
-        int count = 0;
-        for (string str : words)
-            if (hasMatches(str, s))
-                count++;
         
+	    unordered_map<char,vector<int>> mp;
+        for(int i=0;i<s.length();i++)
+            mp[s[i]].push_back(i);                  
+        int count = words.size();
+		int prev, x;
+        for(string w : words) {
+            prev = -1;
+            for(char ch : w) {
+                x = bs(mp[ch],prev);
+                if(x == -1) {
+                    --count;
+                    break;
+                }
+                else
+                    prev = x;                
+            }
+        }
         return count;
     }
 };
