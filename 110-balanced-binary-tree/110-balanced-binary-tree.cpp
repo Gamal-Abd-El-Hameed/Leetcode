@@ -10,16 +10,16 @@
  * };
  */
 class Solution {
-public:
-    int height(TreeNode* root) {
-    return (root == NULL) ? 0 :  1 + max(height(root->left), height(root->right));
-}
-
-bool isBalanced(TreeNode* root) {
-    if(root == NULL)
-        return true;
-    if(abs(height(root->left) - height(root->right)) > 1)
-        return false;
-    return isBalanced(root->left) && isBalanced(root->right);
-}
+    pair<bool, int> helper(TreeNode* root) {
+        if(root == NULL)
+            return {true, 0};
+        pair<bool, int> left = helper(root->left);
+        pair<bool, int> right = helper(root->right);
+        int h1 = left.second, h2 = right.second;
+        return {left.first && right.first && abs(h1 - h2) <= 1, 1 + max(h1, h2)};
+    }
+public:    
+    bool isBalanced(TreeNode* root) {
+        return helper(root).first;
+    }
 };
