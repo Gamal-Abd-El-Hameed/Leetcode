@@ -16,7 +16,8 @@ class Solution {
         pair<bool, int> left = helper(root->left);
         pair<bool, int> right = helper(root->right);
         int h1 = left.second, h2 = right.second;
-        return {left.first && right.first && abs(h1 - h2) <= 1, 1 + max(h1, h2)};
+        bool f = left.first && right.first && abs(h1 - h2) <= 1;
+        return {f, 1 + max(h1, h2)};
     }
 public:    
     bool isBalanced(TreeNode* root) {
