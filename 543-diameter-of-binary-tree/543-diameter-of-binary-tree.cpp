@@ -10,7 +10,6 @@
  * };
  */
 class Solution {
-public:
     pair<int, int> helper(TreeNode* root) {
     if(root == NULL)
         return {0,0};
@@ -21,6 +20,7 @@ public:
     p.second = max(left.first + right.first, max(left.second, right.second));
     return p;
 }
+public:    
 
 int diameterOfBinaryTree(TreeNode* root) {
     return helper(root).second;
