@@ -1,30 +1,51 @@
 class Solution {
 public:
-    int numMatchingSubseq(string s, vector<string>& words) {
-        vector<vector<int>> charMap(26);
-        int n = s.length();
-        
-        for(int i = 0; i < n; i++) {
-            charMap[s[i] - 'a'].push_back(i);
+    int bs(vector<int> &arr, int x){
+        int start = 0;
+        int end = arr.size()-1;
+        int ans = -1;
+        while (start <= end)
+        {
+            int mid = (start + end) / 2;
+
+            if (arr[mid] <= x)
+                start = mid + 1;
+            else
+            {
+                ans = mid;
+                end = mid - 1;
+            }
         }
-        
-        int ans = words.size();
-        
-        for(auto& word : words) {
-            int last = -1;
-            
-            for(char c : word) {
-                auto& cIndexes = charMap[c - 'a'];
-                auto it = upper_bound(cIndexes.begin(), cIndexes.end(), last);
-                if(it == cIndexes.end()) {
-                    ans--;
+        return ans==-1 ? ans : arr[ans];
+    }
+    
+
+    int numMatchingSubseq(string s, vector<string>& words) {
+	
+		// First , we are mapping index of characters of given string to respective characters
+        unordered_map<char,vector<int>> mp;
+        for(int i=0;i<s.length();i++){
+            mp[s[i]].push_back(i);
+        }
+          
+        int count = words.size(); // initializing ans 
+		
+        for(auto w : words){
+            int prev = -1;
+            for(int j=0;j<w.size();j++){
+				// Searching for strictly greater element than prev using binary search
+                int x = bs(mp[w[j]],prev);
+				// If strictly greater element not found, the current subsequence cannot be formed.
+                if(x == -1){
+                    count--;
                     break;
-                } else {
-                    last = *it;
+                }
+				// Else, updating the prev
+                else{
+                    prev = x;
                 }
             }
         }
-        
-        return ans;
+        return count;
     }
 };
