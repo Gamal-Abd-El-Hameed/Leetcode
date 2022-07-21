@@ -1,7 +1,7 @@
 class Solution {
     TreeNode* helper(ListNode *head, ListNode *tail) {
     if(head == tail)
-        return nullptr;
+        return NULL;
     if(head->next == tail)
         return new TreeNode(head->val);
     ListNode *mid = head, *temp = head;
@@ -16,6 +16,6 @@ class Solution {
 }
 public:
 TreeNode* sortedListToBST(ListNode* head) {
-    return helper(head, nullptr);
+    return helper(head, NULL);
 }
 };
