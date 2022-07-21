@@ -20,23 +20,25 @@
  * };
  */
 class Solution {
-    TreeNode* helper(vector<ListNode*> &m, int start, int end) {
-    if(start > end)
-        return NULL;
-    int mid = (start + end) >> 1;
-    TreeNode* root = new TreeNode(m[mid]->val);
-    root->left = helper(m, start, mid - 1);
-    root->right = helper(m, mid + 1, end);
-    return root;
-}
-public:
-TreeNode* sortedListToBST(ListNode* head) {
-    vector<ListNode*> m;
-    ListNode* temp = head;
-    while(temp) {
-        m.push_back(temp);
-        temp = temp->next;
+    TreeNode* helper(unordered_map<int, ListNode*> &m, int start, int end) {
+        if(start > end)
+            return NULL;
+        int mid = (start + end) >> 1;
+        TreeNode* root = new TreeNode(m[mid]->val);
+        root->left = helper(m, start, mid - 1);
+        root->right = helper(m, mid + 1, end);
+        return root;
     }
-    return helper(m, 0, m.size() - 1);
-}
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        unordered_map<int, ListNode*> m;
+        ListNode* temp = head;
+        int i = 0;
+        while(temp) {
+            m[i] = temp;
+            temp = temp->next;
+            ++i;
+        }
+        return helper(m, 0, i - 1);
+    }
 };
