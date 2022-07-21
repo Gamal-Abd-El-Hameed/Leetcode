@@ -1,21 +1,29 @@
 class Solution {
-    TreeNode* helper(ListNode *head, ListNode *tail) {
-    if(head == tail)
-        return NULL;
-    if(head->next == tail)
-        return new TreeNode(head->val);
-    ListNode *mid = head, *temp = head;
-    while(temp != tail && temp->next != tail) {
-        mid = mid->next;
-        temp = temp->next->next;
-    }
-    TreeNode *root = new TreeNode(mid->val);
-    root->left = helper(head, mid);
-    root->right = helper(mid->next, tail);
-    return root;
-}
 public:
-TreeNode* sortedListToBST(ListNode* head) {
-    return helper(head, NULL);
-}
+    TreeNode *sortedListToBST(ListNode *head)
+    {
+    	return sortedListToBST( head, NULL );
+    }
+    
+private:
+    TreeNode *sortedListToBST(ListNode *head, ListNode *tail)
+    {
+    	if( head == tail )
+    		return NULL;
+    	if( head->next == tail )    // 
+    	{	
+    		TreeNode *root = new TreeNode( head->val );
+    		return root;
+    	}
+    	ListNode *mid = head, *temp = head;
+    	while( temp != tail && temp->next != tail )    // 寻找中间节点
+    	{
+    		mid = mid->next;
+    		temp = temp->next->next;
+    	}
+    	TreeNode *root = new TreeNode( mid->val );
+    	root->left = sortedListToBST( head, mid );
+    	root->right = sortedListToBST( mid->next, tail );
+    	return root;
+    }
 };
