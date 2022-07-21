@@ -1,14 +1,14 @@
 class Solution {
-public:
-    bool isValidBST(TreeNode* root) {
-        TreeNode* prev = NULL;
-        return validate(root, prev);
+    bool helper(TreeNode* root, long long low, long long high) {
+        if(root == NULL)
+            return true;
+        int rootVal = root->val;
+        if(rootVal <= low || rootVal >= high)
+            return false;
+        return helper(root->left, low, rootVal) && helper(root->right, rootVal, high);
     }
-    bool validate(TreeNode* node, TreeNode* &prev) {
-        if (node == NULL) return true;
-        if (!validate(node->left, prev)) return false;
-        if (prev != NULL && prev->val >= node->val) return false;
-        prev = node;
-        return validate(node->right, prev);
+public:
+bool isValidBST(TreeNode* root) {
+        return helper(root, LONG_LONG_MIN, LONG_LONG_MAX);
     }
 };
