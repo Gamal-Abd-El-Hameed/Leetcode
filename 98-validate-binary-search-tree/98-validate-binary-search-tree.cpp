@@ -1,14 +1,17 @@
 class Solution {
-    bool helper(TreeNode* root, long long low, long long high) {
-        if(root == NULL)
-            return true;
-        int rootVal = root->val;
-        if(rootVal <= low || rootVal >= high)
-            return false;
-        return helper(root->left, low, rootVal) && helper(root->right, rootVal, high);
-    }
+   bool helper(TreeNode* root, TreeNode* &prev) {
+    if(root == NULL)
+        return true;
+    if(!helper(root->left, prev))
+        return false;
+    if(prev != NULL && prev->val >= root->val)
+        return false;
+    prev = root;
+    return helper(root->right, prev);
+}
 public:
 bool isValidBST(TreeNode* root) {
-        return helper(root, LONG_LONG_MIN, LONG_LONG_MAX);
-    }
+    TreeNode* prev = NULL;
+    return helper(root, prev);
+}
 };
