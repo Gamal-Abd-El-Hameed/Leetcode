@@ -19,8 +19,6 @@ class Solution {
         second = NULL;
         pre = NULL;
         inorder(root);
-        int temp = first->val;
-        first->val = second->val;
-        second->val = temp;
+        swap(first->val, second->val);
     }    
 };
