@@ -19,9 +19,8 @@ public:
     else if(root->val < key)
         root->right = deleteNode(root->right, key);
     else {
-        if(root->right == NULL && root->left == NULL) {
-            root = NULL;
-        }
+        if(root->right == NULL && root->left == NULL)
+            root = NULL;        
         else if(root->right == NULL) {
             TreeNode* temp = root;
             root = root->left;
