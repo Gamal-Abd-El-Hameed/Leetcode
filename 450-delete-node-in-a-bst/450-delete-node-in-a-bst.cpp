@@ -20,7 +20,6 @@ public:
         root->right = deleteNode(root->right, key);
     else {
         if(root->right == NULL && root->left == NULL) {
-            // delete root;
             root = NULL;
         }
         else if(root->right == NULL) {
