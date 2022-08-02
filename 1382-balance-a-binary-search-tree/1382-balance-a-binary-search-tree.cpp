@@ -30,12 +30,12 @@ class Solution {
 }
 void compress(TreeNode *grand, int m) {
   auto n = grand->right;
-  while (m-- > 0) {
+  while (m--) {
     auto old_n = n;
     n = n->right;
-    grand->right = n;
     old_n->right = n->left;
     n->left = old_n;
+    grand->right = n;
     grand = n;
     n = n->right;
   }
