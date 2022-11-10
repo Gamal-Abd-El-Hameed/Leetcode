@@ -1,5 +1,4 @@
 public class Solution {
-
   public int coinChange(int[] coins, int amount) {
     return coinChange(coins, amount, new int[amount + 1]);
   }
