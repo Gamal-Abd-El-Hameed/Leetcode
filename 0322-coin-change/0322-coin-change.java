@@ -4,20 +4,20 @@ public class Solution {
     return coinChange(coins, amount, new int[amount]);
   }
 
-  private int coinChange(int[] coins, int rem, int[] count) {
-    if (rem == 0) return 0;
-    if (count[rem - 1] != 0) return count[rem - 1];
+  private int coinChange(int[] coins, int amount, int[] dp) {
+    if (amount == 0) return 0;    
+    if (dp[amount - 1] != 0) return dp[amount - 1];
     int min = Integer.MAX_VALUE;
-      int diff;
+    int diff;
     for (int coin : coins) {
-        diff = rem - coin;
+        diff = amount - coin;
         if (diff < 0)
             continue;
-      int res = coinChange(coins, diff, count);
+      int res = coinChange(coins, diff, dp);
       if (res >= 0 && res < min)
         min = 1 + res;
     }
-    count[rem - 1] = (min == Integer.MAX_VALUE) ? -1 : min;
-    return count[rem - 1];
+    dp[amount - 1] = (min == Integer.MAX_VALUE) ? -1 : min;
+    return dp[amount - 1];
   }
 }
