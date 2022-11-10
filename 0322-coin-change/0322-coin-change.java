@@ -9,8 +9,12 @@ public class Solution {
     if (rem == 0) return 0;
     if (count[rem - 1] != 0) return count[rem - 1];
     int min = Integer.MAX_VALUE;
+      int diff;
     for (int coin : coins) {
-      int res = coinChange(coins, rem - coin, count);
+        diff = rem - coin;
+        if (diff < 0)
+            continue;
+      int res = coinChange(coins, diff, count);
       if (res >= 0 && res < min)
         min = 1 + res;
     }
