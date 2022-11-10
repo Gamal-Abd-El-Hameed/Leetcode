@@ -5,7 +5,6 @@ public class Solution {
 
   private int coinChange(int[] coins, int amount, int[] dp) {
     if (amount == 0) {
-        dp[0] = 0;
         return 0;
     }
     if (dp[amount] != 0) return dp[amount];
