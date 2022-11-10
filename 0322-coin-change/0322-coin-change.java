@@ -4,9 +4,7 @@ public class Solution {
   }
 
   private int coinChange(int[] coins, int amount, int[] dp) {
-    if (amount == 0) {
-        return 0;
-    }
+    if (amount == 0) return 0;
     if (dp[amount] != 0) return dp[amount];
     int min = Integer.MAX_VALUE;
     int diff;
