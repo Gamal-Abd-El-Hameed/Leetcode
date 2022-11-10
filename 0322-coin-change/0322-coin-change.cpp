@@ -4,8 +4,9 @@ public:
         int n = coins.size();
         vector<int> dp(amount + 1, INT_MAX);
         dp[0] = 0;
-        // for(int coin: coins)
-        //     dp[coin] = 1;
+        for(int coin: coins)
+            if(coin <= amount)
+                dp[coin] = 1;
         for(int i = 1; i <= amount; ++i) {
             for(int coin: coins) {
                 int diff = i - coin;
