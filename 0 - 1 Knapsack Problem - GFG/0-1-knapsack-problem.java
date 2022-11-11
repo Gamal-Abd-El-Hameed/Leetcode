@@ -52,12 +52,12 @@ class Solution
     static int knapSack(int W, int wt[], int val[], int n) 
    {
 	int []dp = new int[W + 1];
-	for (int i = 1; i <= n; i++) {
+	for (int i = 0; i < n; i++) {
 	for (int w = W; w >= 0; w--) {
-		if (wt[i - 1] > w)		
+		if (wt[i] > w)		
 			break;
 		dp[w] = Math.max(dp[w],
-						dp[w - wt[i - 1]] + val[i - 1]);
+						dp[w - wt[i]] + val[i]);
 	}
 	}
 	return dp[W];
