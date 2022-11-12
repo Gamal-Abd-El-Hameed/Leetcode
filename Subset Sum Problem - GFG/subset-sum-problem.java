@@ -34,57 +34,20 @@ class GFG
 //User function Template for Java
 
 class Solution{
-    private static boolean isSubsetSum(int set[],
-                               int n, int sum)
-    {
-        // The value of subset[i][j] will be
-        // true if there is a subset of
-        // set[0..j-1] with sum equal to i
-        boolean subset[][] = new boolean[sum + 1][n + 1];
-  
-        // If sum is 0, then answer is true
+    static Boolean isSubsetSum(int n, int arr[], int S){
+        boolean[][] dp = new boolean[S + 1][n + 1];
         for (int i = 0; i <= n; i++)
-            subset[0][i] = true;
-  
-        // If sum is not 0 and set is empty,
-        // then answer is false
-        for (int i = 1; i <= sum; i++)
-            subset[i][0] = false;
-  
-        // Fill the subset table in bottom
-        // up manner
-        for (int i = 1; i <= sum; i++) {
+            dp[0][i] = true;
+        for (int i = 1; i <= S; i++)
+            dp[i][0] = false;
+        for (int sum = 1; sum <= S; sum++) {
             for (int j = 1; j <= n; j++) {
-                subset[i][j] = subset[i][j - 1];
-                if (i >= set[j - 1])
-                    subset[i][j] = subset[i][j]
-                                   || subset[i - set[j - 1]][j - 1];
+                dp[sum][j] = dp[sum][j - 1];
+                if (sum >= arr[j - 1])
+                    dp[sum][j] = dp[sum][j] || dp[sum - arr[j - 1]][j - 1];
             }
         }
-  
-        /* // uncomment this code to print table
-        for (int i = 0; i <= sum; i++)
-        {
-        for (int j = 0; j <= n; j++)
-            System.out.println (subset[i][j]);
-        } */
-  
-        return subset[sum][n];
-    }
-    // private static int subsetSum(int[] a, int n, int sum) {
-    //     if (sum == 0) return 1;
-    //     if (n <= 0) return 0;
-    //     if (tab[n - 1][sum] != -1) return tab[n - 1][sum];
-    //     if (a[n-1] > sum) return tab[n-1][sum] = subsetSum(a, n - 1, sum);
-    //     return tab[n-1][sum] = subsetSum(a, n - 1, sum) +
-    //                          subsetSum(a, n - 1, sum - a[n-1]);
-    // }
-    // static int[][] tab;
-    static Boolean isSubsetSum(int n, int arr[], int S){
-        // tab = new int[n + 1][S + 1];
-        // for (int i = 1; i <= n; i++)
-        //     for (int j = 1; j <= S; j++)
-        //         tab[i][j] = -1;
-        return isSubsetSum(arr, n, S);
+        return dp[S][n];
+    
     }
 }
