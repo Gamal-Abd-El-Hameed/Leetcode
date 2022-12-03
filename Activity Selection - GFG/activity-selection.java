@@ -87,7 +87,7 @@ class Solution
         while (low <= high) {
             mid = (low + high) >> 1;
             if (noOverlapBetween(A[mid].getFinish(), A[targetIndex].getStart())) {
-                if (A[mid + 1].getFinish() < A[targetIndex].getStart())
+                if (noOverlapBetween(A[mid + 1].getFinish(), A[targetIndex].getStart()))
                     low = mid + 1;
                 else
                     return mid;
