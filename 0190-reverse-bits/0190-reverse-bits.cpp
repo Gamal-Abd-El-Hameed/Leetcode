@@ -10,9 +10,10 @@ public:
             n >>= 1;
             count--;
         }
-        while(count){
+        while(count) {
             count--;
-            ans <<= 1;}
+            ans <<= 1;
+        }
         return ans;
     }
 };
