@@ -2,21 +2,22 @@ class Solution {
 public:
     bool isValid(string s) {
     stack<char> st;
-    char temp;
+    const char openingBrackets[] = {'(', '{', '['};
+    const char closingBrackets[] = {')', '}', ']'};
     for (char ch : s) {
-        if (ch == '(' || ch == '{' || ch == '[')
-            st.push(ch);
-        else {
-            if (st.empty())
-                return false;
-            temp = st.top();
-            st.pop();
-            if (ch == ')' && temp != '(')
-                return false;
-            else if (ch == '}' && temp != '{')
-                return false;
-            else if (ch == ']' && temp != '[')
-                return false;
+        switch (ch) {
+            case '(':
+            case '{':
+            case '[':
+                st.push(ch);
+                break;
+            case ')':
+            case '}':
+            case ']':
+                if (st.empty() || st.top() != openingBrackets[find(closingBrackets, closingBrackets + 3, ch) - closingBrackets])
+                    return false;
+                st.pop();
+                break;
         }
     }
     return st.empty();
