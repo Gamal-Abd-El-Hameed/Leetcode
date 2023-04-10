@@ -15,7 +15,7 @@ public:
             return list2;
         if (list2 == nullptr)
             return list1;
-        ListNode* curr = new ListNode(0);
+        auto* curr = new ListNode(0);
         ListNode* head = curr;
         while (true) {
             if (list1->val <= list2->val) {
