@@ -10,24 +10,27 @@
  */
 class Solution {
 public:
-    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
-        ListNode* dummy = new ListNode(0);
-        ListNode* tail = dummy;
-        while (list1 && list2) {
-            if (list1->val < list2->val) {
-                tail->next = list1;
-                list1 = list1->next;
-            } else {
-                tail->next = list2;
-                list2 = list2->next;
-            }
-            tail = tail->next;
+    ListNode* mergeTwoLists(const ListNode* const &list1, const ListNode* const &list2) {
+    ListNode dummy(0);
+    ListNode* tail = &dummy;
+    const ListNode* current1 = list1;
+    const ListNode* current2 = list2;
+    while (current1 && current2) {
+        if (current1->val < current2->val) {
+            tail->next = const_cast<ListNode*>(current1);
+            current1 = current1->next;
+        } else {
+            tail->next = const_cast<ListNode*>(current2);
+            current2 = current2->next;
         }
-        if (list1) {
-            tail->next = list1;
-        } else if (list2) {
-            tail->next = list2;
-        }
-        return dummy->next; 
+        tail = tail->next;
     }
+    if (current1) {
+        tail->next = const_cast<ListNode*>(current1);
+    } else if (current2) {
+        tail->next = const_cast<ListNode*>(current2);
+    }
+    return dummy.next;
+}
+
 };
