@@ -18,22 +18,4 @@ public:
         return false;
     return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
 }
-
-bool isSubtree(TreeNode* root, TreeNode* subRoot) {
-    if (!root)
-        return !subRoot;
-    queue<TreeNode*> Q;
-    Q.push(root);
-    while (!Q.empty()) {
-        root = Q.front();
-        Q.pop();
-        if (isSameTree(root, subRoot))
-            return true;
-        if (root->left)
-            Q.push(root->left);
-        if (root->right)
-            Q.push(root->right);
-    }
-    return false;
-}
 };
