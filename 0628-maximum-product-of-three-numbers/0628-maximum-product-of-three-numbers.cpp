@@ -1,27 +1,29 @@
 class Solution {
 public:
     int maximumProduct(vector<int>& nums) {
-    int n = nums.size(), max_value, second_max_value, third_max_value, min_value, second_min_value;
-    max_value = second_max_value = third_max_value = INT_MIN;
-    min_value = second_min_value = INT_MAX;
-    for (int i = 0; i < n; i++) {
-        if (nums[i] > max_value) {
-            third_max_value = second_max_value;
-            second_max_value = max_value;
-            max_value = nums[i];
-        } else if (nums[i] > second_max_value) {
-            third_max_value = second_max_value;
-            second_max_value = nums[i];
-        } else if (nums[i] > third_max_value) {
-            third_max_value = nums[i];
+    int max1 = INT_MIN, max2 = INT_MIN, max3 = INT_MIN;
+    int min1 = INT_MAX, min2 = INT_MAX;
+    for (int num : nums) {
+        if (num > max1) {
+            max3 = max2;
+            max2 = max1;
+            max1 = num;
         }
-        if (nums[i] < min_value) {
-            second_min_value = min_value;
-            min_value = nums[i];
-        } else if (nums[i] < second_min_value) {
-            second_min_value = nums[i];
+        else if (num > max2) {
+            max3 = max2;
+            max2 = num;
+        }
+        else if (num > max3) {
+            max3 = num;
+        }
+        if (num < min1) {
+            min2 = min1;
+            min1 = num;
+        }
+        else if (num < min2) {
+            min2 = num;
         }
     }
-    return max(max_value * second_max_value * third_max_value, max_value * min_value * second_min_value);
+    return max(max1 * max2 * max3, max1 * min1 * min2);
 }
 };
