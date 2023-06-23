@@ -6,7 +6,7 @@ public:
         tmp = max_value;
         max_value = max(num, max(num * max_value, num * min_value));
         min_value = min(num, min(num * tmp, num * min_value));
-        res = max(res, max(max_value, min_value));
+        res = max(res, max_value);
     }
     return res;
 }
