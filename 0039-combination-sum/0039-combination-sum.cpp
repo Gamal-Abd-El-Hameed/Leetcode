@@ -10,7 +10,8 @@ public:
                     sub = dp[i - candidate];
                     if (!sub.empty()) {
                         for (vector<int> &v : sub) {
-                            v.insert(lower_bound(v.begin(), v.end(), candidate), candidate);
+                            v.push_back(candidate);
+                            sort(v.begin(), v.end());
                             if (find(dp[i].begin(), dp[i].end(), v) == dp[i].end()) {
                                 dp[i].push_back(v);
                             }
