@@ -1,23 +1,20 @@
-
 class Solution {
-private:
-    bool helper(string s, vector<string>& wordDict, int i) {
-        if (i == s.size()) return true;
-        if (dp[i] != -1) return dp[i];
-        string subsetString;
-        for (const string& word : wordDict) {
-            subsetString = s.substr(i, word.size());
-            if (word == subsetString) {
-                dp[i] = helper(s, wordDict, i + word.size());
-                if (dp[i]) return true;
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size();
+        vector<bool> dp(n + 1, false);
+        dp[0] = true;
+
+        for (int i = 1; i <= n; ++i) {
+            for (const string& word : wordDict) {
+                int wordLen = word.size();
+                if (i >= wordLen && dp[i - wordLen] && s.substr(i - wordLen, wordLen) == word) {
+                    dp[i] = true;
+                    break;
+                }
             }
         }
-        return dp[i] = false;
-    }
-public:
-    vector<int> dp;
-    bool wordBreak(string s, vector<string>& wordDict) {
-        dp.resize(s.size(), -1);
-        return helper(s, wordDict, 0);
+
+        return dp[n];
     }
 };
