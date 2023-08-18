@@ -1,14 +1,12 @@
 class Solution {
 public:
-    int rob(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> dp(nums);
-        for (int i = 1; i < n; i++) {
-            for (int j = 0; j < i - 1; j++) {
-                dp[i] = max(dp[i], dp[j] + nums[i]);
-            }
-            dp[i] = max(dp[i], dp[i - 1]);
+    int rob(vector<int>& nums) {        
+        int notTaken = 0, taken = 0, tmp;
+        for (int num:nums) {
+            tmp = max(notTaken, taken + num);
+            taken = notTaken;
+            notTaken = tmp;
         }
-        return dp[n - 1];
+        return tmp;
     }
 };
