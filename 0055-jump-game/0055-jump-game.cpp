@@ -4,13 +4,12 @@ public:
         int n = nums.size();
         vector<bool>dp(n, false);
         dp[0] = true;
-        int jumps;
-        for (int i = 1; i <= n; i++) {
-            if (!dp[i - 1]) continue;
-            jumps = nums[i - 1];
-            for (int jump = 1; jump <= jumps && i - 1 + jump < n; jump++)
-                dp[i - 1 + jump] = true;
-        }
+        for (int i = 1; i < n; i++)
+            for (int j = i - 1; j >= 0; j--)
+                if (dp[j] && nums[j] >= i - j) {
+                    dp[i] = true;
+                    break;
+                }
         return dp[n - 1];
     }
 };
