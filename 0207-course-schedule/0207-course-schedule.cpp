@@ -17,8 +17,9 @@ private:
     }
 public:
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        valuesMap.reserve(numCourses);
         for (vector<int> pair:prerequisites)
-            valuesMap[pair[0]].insert(pair[1]);
+            valuesMap[pair[0]].emplace(pair[1]);
         return all_of(valuesMap.begin(), valuesMap.end(),
                                         [this](const auto &pair)
                                         { return dfs(pair.first); });
