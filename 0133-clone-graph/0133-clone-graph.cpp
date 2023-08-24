@@ -1,24 +1,24 @@
 class Solution {
-private:
-    unordered_set<int> visited;
-    unordered_map<int, Node*> nodes_map;
-    Node* dfs(Node* node) {
-        Node* newNode = new Node(node->val);
-        visited.insert(node->val);
-        nodes_map[node->val] = newNode;
-        for (Node* neighbor : node->neighbors) {
-            if (visited.find(neighbor->val) != visited.end()) {
-                newNode->neighbors.push_back(nodes_map[neighbor->val]);
-                continue;
-            }
-            Node* newNeighbor = dfs(neighbor);
-            newNode->neighbors.push_back(newNeighbor);
-        }
-        return newNode;
-    }
 public:
     Node* cloneGraph(Node* node) {
-        if (node == nullptr) return nullptr;
-        return dfs(node);
+        if (node == NULL) return NULL;                
+        Node* copy = new Node(node->val);
+        m[node] = copy;        
+        queue<Node*> q;
+        q.push(node);        
+        while (!q.empty()) {
+            Node* curr = q.front();
+            q.pop();            
+            for (Node* neighbor:curr->neighbors) {                
+                if (m.find(neighbor) == m.end()) {
+                    m[neighbor] = new Node(neighbor->val);
+                    q.push(neighbor);
+                }                
+                m[curr]->neighbors.push_back(m[neighbor]);
+            }
+        }        
+        return copy;
     }
+private:
+    unordered_map<Node*, Node*> m;
 };
