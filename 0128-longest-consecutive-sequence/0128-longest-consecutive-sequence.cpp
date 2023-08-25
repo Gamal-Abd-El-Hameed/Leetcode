@@ -2,18 +2,18 @@ class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
         if (nums.empty()) return 0;
-        sort(nums.begin(), nums.end());
-        int len = 1, maxLen = 1;
-        for (int i = 1; i < nums.size(); i++) {
-            if (nums[i] == nums[i - 1]) continue;
-            if (nums[i] - nums[i - 1] == 1) {
-                len++;
-            }
-            else {
-                maxLen = max(maxLen, len);
-                len = 1;
+        unordered_set<int> s(nums.begin(), nums.end());
+        int len = 0, maxLen = 0;
+        for (int num:nums) {
+            if (s.find(num - 1) == s.end()) {
+                while (s.find(num) != s.end()) {
+                    len++;
+                    num++;
+                }
+                maxLen = max(len, maxLen);
+                len = 0;
             }
         }
-        return max(maxLen, len);
+        return maxLen;
     }
 };
