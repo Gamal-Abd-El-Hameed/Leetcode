@@ -1,30 +1,29 @@
 class Solution {
 public:
     vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
-        bool isInserted = false;
-        for (int i = 0; i < intervals.size(); i++) {
-            if (intervals[i][0] >= newInterval[0]) {
-                intervals.insert(intervals.begin() + i, newInterval);
-                isInserted = true;
-                break;
-            }
+        vector<vector<int>> result;
+        int i = 0;
+
+        // Insert all intervals that come before the newInterval
+        while (i < intervals.size() && intervals[i][1] < newInterval[0]) {
+            result.push_back(intervals[i]);
+            i++;
         }
-        if (!isInserted)
-            intervals.push_back(newInterval);
-        int i = 1;
+
+        // Merge overlapping intervals with the newInterval
+        while (i < intervals.size() && intervals[i][0] <= newInterval[1]) {
+            newInterval[0] = min(newInterval[0], intervals[i][0]);
+            newInterval[1] = max(newInterval[1], intervals[i][1]);
+            i++;
+        }
+        result.push_back(newInterval);
+
+        // Insert the remaining intervals
         while (i < intervals.size()) {
-            if (intervals[i - 1][0] <= intervals[i][0]
-            &&  intervals[i][0] <= intervals[i - 1][1]
-            &&  intervals[i - 1][1] <= intervals[i][1]) {
-                intervals[i - 1][1] = intervals[i][1];
-                intervals.erase(intervals.begin() + i);
-            }
-            else if (intervals[i][0] >= intervals[i - 1][0]
-            &&       intervals[i][1] <= intervals[i - 1][1]) {
-                intervals.erase(intervals.begin() + i);
-            }
-            else i++;
+            result.push_back(intervals[i]);
+            i++;
         }
-        return intervals;
+
+        return result;
     }
 };
