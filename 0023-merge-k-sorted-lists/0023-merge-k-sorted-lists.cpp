@@ -1,6 +1,6 @@
 class Solution {
 private:
-    ListNode* mergeHelper(ListNode* leftList, ListNode* rightList) {
+    ListNode* mergeTwoLists(ListNode* leftList, ListNode* rightList) {
         if (leftList == nullptr)
             return rightList;
         if (rightList == nullptr)
@@ -26,28 +26,29 @@ private:
             }
             tmp = tmp->next;
         }
-        while (leftList) {
+        if (leftList)
             tmp->next = leftList;
-            leftList = leftList->next;
-            tmp = tmp->next;
-        }
-        while (rightList) {
+        if (rightList)
             tmp->next = rightList;
-            rightList = rightList->next;
-            tmp = tmp->next;
-        }
         return root;
-    }
-    ListNode* merge(vector<ListNode*> lists, int low, int high) {
-        if (low == high) return lists[low];
-        int mid = (low + high) >> 1;
-        ListNode* leftList = merge(lists, low, mid);
-        ListNode* rightList = merge(lists, mid + 1, high);
-        return mergeHelper(leftList, rightList);
     }
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
         if (lists.empty()) return nullptr;
-        return merge(lists, 0, lists.size() - 1);
+        vector<ListNode*> mergedLists;
+        ListNode *leftList, *rightList;
+        while (lists.size() > 1) {
+            mergedLists.clear();
+            for (int i = 0; i < lists.size(); i += 2) {
+                leftList = lists[i];
+                if (i + 1 < lists.size())
+                    rightList = lists[i + 1];
+                else
+                    rightList = nullptr;
+                mergedLists.push_back(mergeTwoLists(leftList, rightList));
+            }
+            lists = mergedLists;
+        }
+        return lists[0];
     }
 };
