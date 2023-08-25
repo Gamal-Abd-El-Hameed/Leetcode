@@ -1,12 +1,10 @@
 class Solution {
 private:
-    int size = 0;
     ListNode* reverseList(ListNode* head) {
         ListNode* prev = nullptr;
         ListNode* current = head;
 
         while (current) {
-            size++;
             ListNode* nextNode = current->next;
             current->next = prev;
             prev = current;
@@ -15,36 +13,32 @@ private:
 
         return prev;
     }
+
 public:
     void reorderList(ListNode* head) {
-        if (!head) return;
-        ListNode* res = head;
-        ListNode* headCopy = new ListNode (head->val);
-        ListNode* tmp;
-        tmp = head->next;
-        ListNode* headCopyTemp = headCopy;
-        while (tmp) {
-            headCopyTemp->next = new ListNode(tmp->val);
-            tmp = tmp->next;
-            headCopyTemp = headCopyTemp->next;
+        if (!head || !head->next || !head->next->next) return;
+
+        // Find the middle of the linked list
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while (fast->next && fast->next->next) {
+            slow = slow->next;
+            fast = fast->next->next;
         }
-        ListNode* tail = reverseList(headCopy);
-        head = head->next;
-        tmp = res;
-        int i = 1;
-        while(i < size) {
-            if (i % 2) {
-                tmp->next = tail;
-                tail = tail->next;
-            }
-            else {
-                tmp->next = head;
-                head = head->next;
-            }
-            i++;
-            tmp = tmp->next;
+
+        // Reverse the second half of the linked list
+        ListNode* secondHalf = reverseList(slow->next);
+        slow->next = nullptr;
+
+        // Reorder the linked list by merging the two halves
+        ListNode* firstHalf = head;
+        while (secondHalf) {
+            ListNode* temp1 = firstHalf->next;
+            ListNode* temp2 = secondHalf->next;
+            firstHalf->next = secondHalf;
+            secondHalf->next = temp1;
+            firstHalf = temp1;
+            secondHalf = temp2;
         }
-        tmp->next = nullptr;
-        head = res;
     }
 };
