@@ -20,7 +20,7 @@ public:
                     break;
                 }
             }
-//            if (j == dict[i].size() && j < dict[i - 1].size()) return "";
+            if (j == dict[i].size() && j < dict[i - 1].size()) return "";
         }
         for (auto &it : G) {
             for (int to : it.second) {
