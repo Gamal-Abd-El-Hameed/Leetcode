@@ -1,31 +1,42 @@
 class Solution {
 private:
-    void dfs(int prev, int curr, unordered_set<int>& visited, unordered_map<int, unordered_set<int>>& G) {
-        if (visited.find(curr) != visited.end())
-            return;
-        visited.insert(curr);
-        for (int neighbor : G[curr])
-            if (neighbor != prev)
-                dfs(curr, neighbor, visited, G);
+    int doFind(int n, int parents[]) {
+        int p = parents[n];
+        while (p != parents[p]) {
+            parents[p] = parents[parents[p]];
+            p = parents[p];
+        }
+        return p;
+    }
+
+    int doUnion(int n1, int n2, int parents[], int ranks[]) {
+        int p1 = doFind(n1, parents);
+        int p2 = doFind(n2, parents);
+        if (p1 == p2)
+            return 0;
+        if (ranks[p1] > ranks[p2]) {
+            parents[p2] = p1;
+            ranks[p1] += ranks[p2];
+        }
+        else {
+            parents[p1] = p2;
+            ranks[p2] += ranks[p1];
+        }
+        return 1;
     }
 public:
     int findCircleNum(vector<vector<int>>& isConnected) {
-        unordered_set<int> visited;
-        unordered_map<int, unordered_set<int>> G;
-        int n = isConnected.size();
+        int n = isConnected.size(), ans = n;
+        int parents[n], ranks[n];
+        fill_n(ranks, n, 1);
+        for (int i = 0; i < n; i++) {
+            parents[i] = i;
+        }
         for (int i = 0; i < n - 1; i++) {
             for (int j = i + 1; j < n; j++) {
                 if (isConnected[i][j]) {
-                    G[i].insert(j);
-                    G[j].insert(i);
+                    ans -= doUnion(i, j, parents, ranks);
                 }
-            }
-        }
-        int ans = 0;
-        for (int i = 0; i < n; i++) {
-            if (visited.find(i) == visited.end()) {
-                ans++;
-                dfs(-1, i, visited, G);
             }
         }
         return ans;
