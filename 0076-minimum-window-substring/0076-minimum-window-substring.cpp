@@ -4,13 +4,12 @@ public:
         if (s.empty() || t.empty())
             return "";
         int wordLen = t.size(), sentenceLen = s.size();
-        unordered_map<char, int> originalWordMap;
+        unordered_map<char, int> wordMap;
         unordered_set<char> wordSet;
         for (char c:t) {
-            originalWordMap[c]++;
+            wordMap[c]++;
             wordSet.insert(c);
         }
-        unordered_map<char, int> wordMap(originalWordMap);
         string currentWindow, minWindow = s;
         int i = 0, counter = 0;
         char c;
