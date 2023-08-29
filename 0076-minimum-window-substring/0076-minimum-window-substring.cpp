@@ -1,75 +1,51 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        if (t.empty()) return "";
-        int wordLen = t.size(), sentenceLen = s.size();
-        unordered_map<char, int> wordMap;
-        unordered_set<char> wordSet;
-        for (char c:t) {
-            wordMap[c]++;
-            wordSet.insert(c);
+        vector<int> targetChars(128, 0); // Store frequency of characters in t
+        
+        for (char c : t) {
+            targetChars[c]++;
         }
-        int i = 0, counter = 0, start;
-        char c;
-        while (i < sentenceLen) {
-            c = s[i];
-            if (wordSet.find(c) != wordSet.end()) {
-                start = i;
-                wordMap[c]--;
-                counter++;
-                i++;
-                break;
+        
+        int requiredChars = t.size(); // Number of unique characters in t
+        
+        int left = 0, right = 0; // Sliding window pointers
+        int minLen = INT_MAX; // Minimum window length
+        int minStart = 0; // Start index of the minimum window
+        
+        int formed = 0; // Number of unique characters formed in the current window
+        vector<int> windowChars(128, 0); // Store frequency of characters in the current window
+        
+        while (right < s.size()) {
+            char c = s[right];
+            windowChars[c]++;
+            if (windowChars[c] <= targetChars[c]) {
+                formed++;
             }
-            i++;
-        }
-        while (counter < wordLen && i < sentenceLen) {
-            c = s[i];
-            if (wordSet.find(c) != wordSet.end()) {
-                if (wordMap[c] > 0)
-                    counter++;
-                wordMap[c]--;
+            
+            while (formed == requiredChars && left <= right) {
+                // Update the minimum window length and start index
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minStart = left;
+                }
+                
+                char leftChar = s[left];
+                windowChars[leftChar]--;
+                if (windowChars[leftChar] < targetChars[leftChar]) {
+                    formed--;
+                }
+                
+                left++;
             }
-            i++;
+            
+            right++;
         }
-        if (counter < wordLen)
+        
+        if (minLen == INT_MAX) {
             return "";
-        int end = i - 1, oldStart, minStart = 0, minLen = s.size();
-        while (end < sentenceLen) {
-            if (counter == wordLen) {
-                oldStart = start;
-                if (end - start + 1 < minLen) {
-                    minStart = start;
-                    minLen = end - start + 1;
-                }
-                if (wordMap[s[start]] == 0)
-                    counter--;
-                wordMap[s[start]]++;
-                start++;
-                while (start < end) {
-                    if (wordSet.find(s[start]) == wordSet.end()) {
-                        start++;
-                        continue;
-                    }
-                    else if (wordMap[s[start]] < 0) {
-                        wordMap[s[start]]++;
-                        start++;
-                        continue;
-                    }
-                    else break;
-                }
-            }
-            else {
-                end++;
-                if (end == sentenceLen)
-                    break;
-                c = s[end];
-                if (wordSet.find(c) != wordSet.end()) {
-                    if (wordMap[c] > 0)
-                        counter++;
-                    wordMap[c]--;
-                }
-            }
         }
+        
         return s.substr(minStart, minLen);
     }
 };
