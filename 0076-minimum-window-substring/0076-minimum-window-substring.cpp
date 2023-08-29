@@ -1,7 +1,7 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        if (s.empty() || t.empty())
+        if (t.empty())
             return "";
         int wordLen = t.size(), sentenceLen = s.size();
         unordered_map<char, int> wordMap;
@@ -10,7 +10,7 @@ public:
             wordMap[c]++;
             wordSet.insert(c);
         }
-        string currentWindow, minWindow = s;
+        string minWindow = s;
         int i = 0, counter = 0, start;
         char c;
         while (i < sentenceLen) {
@@ -39,9 +39,8 @@ public:
         while (end < sentenceLen) {
             if (counter == wordLen) {
                 oldStart = start;
-                currentWindow = s.substr(start, end - start + 1);
-                if (currentWindow.size() < minWindow.size())
-                    minWindow = currentWindow;
+                if (end - start + 1 < minWindow.size())
+                    minWindow = s.substr(start, end - start + 1);
                 if (wordMap[s[start]] == 0)
                     counter--;
                 wordMap[s[start]]++;
