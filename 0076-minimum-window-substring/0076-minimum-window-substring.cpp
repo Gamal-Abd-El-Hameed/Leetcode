@@ -11,14 +11,12 @@ public:
             wordSet.insert(c);
         }
         string currentWindow, minWindow = s;
-        int i = 0, counter = 0;
+        int i = 0, counter = 0, start;
         char c;
-        int start;
         while (i < sentenceLen) {
             c = s[i];
             if (wordSet.find(c) != wordSet.end()) {
                 start = i;
-                currentWindow += c;
                 wordMap[c]--;
                 counter++;
                 i++;
@@ -28,7 +26,6 @@ public:
         }
         while (counter < wordLen && i < sentenceLen) {
             c = s[i];
-            currentWindow += c;
             if (wordSet.find(c) != wordSet.end()) {
                 if (wordMap[c] > 0)
                     counter++;
@@ -42,6 +39,7 @@ public:
         while (end < sentenceLen) {
             if (counter == wordLen) {
                 oldStart = start;
+                currentWindow = s.substr(start, end - start + 1);
                 if (currentWindow.size() < minWindow.size())
                     minWindow = currentWindow;
                 if (wordMap[s[start]] == 0)
@@ -60,14 +58,12 @@ public:
                     }
                     else break;
                 }
-                currentWindow = currentWindow.substr(start - oldStart);
             }
             else {
                 end++;
                 if (end == sentenceLen)
                     break;
                 c = s[end];
-                currentWindow += c;
                 if (wordSet.find(c) != wordSet.end()) {
                     if (wordMap[c] > 0)
                         counter++;
