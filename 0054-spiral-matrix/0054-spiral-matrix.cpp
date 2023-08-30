@@ -1,39 +1,36 @@
 class Solution {
 public:
     vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        int m = matrix.size(), n = matrix[0].size();
-        int totalElements = m * n, counter = 0, i = 0, j, oldI, oldJ = 0;
-        vector<int> res(totalElements);
-        while (i < m) {
-            oldI = i;
-            j = oldJ;
-            while (j < n && counter < totalElements) {
-                res[counter++] = matrix[i][j];
-                j++;
+        int left = 0, top = 0, right = matrix[0].size(), bottom = matrix.size(), counter = 0;
+        vector<int> result(right * bottom);
+
+        while (top < bottom && left < right) {
+            for (int j = left; j < right; j++) {
+                result[counter++] = matrix[top][j];
             }
-            j--;
-            i++;
-            while (i < m && counter < totalElements) {
-                res[counter++] = matrix[i][j];
-                i++;
+            top++;
+
+            for (int i = top; i < bottom; i++) {
+                result[counter++] = matrix[i][right - 1];
             }
-            j--;
-            i--;
-            while (j >= oldJ && counter < totalElements) {
-                res[counter++] = matrix[i][j];
-                j--;
+            right--;
+
+            if (top == bottom)
+                break;
+
+            for (int j = right - 1; j >= left; j--) {
+                result[counter++] = matrix[bottom - 1][j];
             }
-            j++;
-            i--;
-            while (i > oldI && counter < totalElements) {
-                res[counter++] = matrix[i][j];
-                i--;
+            bottom--;
+
+            if (left == right)
+                break;
+            for (int i = bottom - 1; i >= top; i--) {
+                result[counter++] = matrix[i][left];
             }
-            i = oldI + 1;
-            oldJ = j + 1;
-            m--;
-            n--;
+            left++;
         }
-        return res;
+
+        return result;
     }
 };
