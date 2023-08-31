@@ -8,14 +8,14 @@ public:
         while (end < n) {
             if (visited.find(s[end]) == visited.end()) {
                 visited.insert(s[end]);
-                ans = max(ans, end - start + 1);
                 end++;
             }
             else {
+                ans = max(ans, end - start);
                 visited.erase(s[start]);
                 start++;
             }
         }
-        return ans;
+        return max(ans, end - start);
     }
 };
