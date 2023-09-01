@@ -1,18 +1,32 @@
 class Solution {
-public:
-    int characterReplacement(string s, int k) {
+private:
+    bool canMakeValidSubstring(const string& s, int substringLength, int k) {
         int frequencies[26];
         fill_n(frequencies, 26, 0);
-        int left = 0, maxFreq = 0, ans = 0, n = s.size();
-        for (int right = 0; right < n; right++) {
-            frequencies[s[right] - 'A']++;
-            maxFreq = max(maxFreq, frequencies[s[right] - 'A']);
-            while (right - left + 1 - maxFreq > k) {
-                frequencies[s[left] - 'A']--;
-                left++;
+        int start = 0, maxFreq = 0, n = s.size();
+        for (int end = 0; end < n; end++) {
+            ++frequencies[s[end] - 'A'];
+            if (end - start + 1 > substringLength) {
+                frequencies[s[start] - 'A']--;
+                start++;
             }
-            ans = max(ans, right - left + 1);
+            maxFreq = max(maxFreq, frequencies[s[end] - 'A']);
+            if (substringLength - maxFreq <= k) {
+                return true;
+            }
         }
-        return ans;
+        return false;
+    }
+public:
+    int characterReplacement(string s, int k) {
+        int lo = 1, hi = s.size() + 1, mid;
+        while (lo + 1 < hi) {
+            mid = lo + ((hi - lo) >> 1);
+            if (canMakeValidSubstring(s, mid, k))
+                lo = mid;
+            else
+                hi = mid;
+        }
+        return lo;
     }
 };
