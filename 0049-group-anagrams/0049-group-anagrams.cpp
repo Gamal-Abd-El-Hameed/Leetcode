@@ -1,47 +1,28 @@
 class Solution {
-private:
-    bool doTwoStringsHaveSameChars(const vector<string> &strs, const vector<vector<int>> &frequencies,
-                                   int firstStringIndex, int secondStringIndex) {
-        const string &str1 = strs[firstStringIndex], &str2 = strs[secondStringIndex];
-        if (str1.length() != str2.length())
-            return false;
-        return all_of(str1.begin(), str1.end(), [&](char c) {
-            return frequencies[firstStringIndex][c - 'a'] == frequencies[secondStringIndex][c - 'a'];
-        });
-    }
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        if (strs.empty())
-            return {};
-        int numberOfStrings = strs.size(), stringIndexInSet;
-        vector<vector<int>> frequencies(numberOfStrings, vector<int>(26, 0));
-        string str;
-        for (int i = 0; i < numberOfStrings; i++) {
-            str = strs[i];
-            for (char c: str) {
-                frequencies[i][c - 'a']++;
-            }
+        unordered_map<string, vector<string>> m;
+        for (const auto & str : strs) {
+            m[getKey(str)].push_back(str);
         }
-        unordered_map<int, vector<string>> groupingMap;
-        bool newGroup;
-        for (int currentStringIndex = 0; currentStringIndex < numberOfStrings; currentStringIndex++) {
-            newGroup = true;
-            for (const auto &pair:groupingMap) {
-                stringIndexInSet = pair.first;
-                if (doTwoStringsHaveSameChars(strs, frequencies, currentStringIndex, stringIndexInSet)) {
-                    groupingMap[stringIndexInSet].push_back(strs[currentStringIndex]);
-                    newGroup = false;
-                    break;
-                }
-            }
-            if (newGroup) {
-                groupingMap[currentStringIndex].push_back(strs[currentStringIndex]);
-            }
+
+        vector<vector<string>> result;
+        for (auto & it : m) {
+            result.push_back(it.second);
         }
-        vector<vector<string>> groupsRes;
-        for (const auto &pair:groupingMap) {
-            groupsRes.push_back(pair.second);
+        return result;
+    }
+private:
+    string getKey(const string& str) {
+        vector<int> count(26);
+        for (char j : str) {
+            count[j - 'a']++;
         }
-        return groupsRes;
+
+        string key = "";
+        for (int i : count) {
+            key.append(to_string(i) + '#');
+        }
+        return key;
     }
 };
