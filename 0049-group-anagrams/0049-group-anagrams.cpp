@@ -13,7 +13,7 @@ public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
         if (strs.empty())
             return {};
-        int numberOfStrings = strs.size();
+        int numberOfStrings = strs.size(), stringIndexInSet;
         vector<vector<int>> frequencies(numberOfStrings, vector<int>(26, 0));
         string str;
         for (int i = 0; i < numberOfStrings; i++) {
@@ -22,12 +22,12 @@ public:
                 frequencies[i][c - 'a']++;
             }
         }
-        unordered_set<int> groupingSet;
         unordered_map<int, vector<string>> groupingMap;
         bool newGroup;
         for (int currentStringIndex = 0; currentStringIndex < numberOfStrings; currentStringIndex++) {
             newGroup = true;
-            for (const int stringIndexInSet:groupingSet) {
+            for (const auto &pair:groupingMap) {
+                stringIndexInSet = pair.first;
                 if (doTwoStringsHaveSameChars(strs, frequencies, currentStringIndex, stringIndexInSet)) {
                     groupingMap[stringIndexInSet].push_back(strs[currentStringIndex]);
                     newGroup = false;
@@ -35,7 +35,6 @@ public:
                 }
             }
             if (newGroup) {
-                groupingSet.insert(currentStringIndex);
                 groupingMap[currentStringIndex].push_back(strs[currentStringIndex]);
             }
         }
