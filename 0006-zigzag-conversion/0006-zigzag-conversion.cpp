@@ -1,34 +1,20 @@
 class Solution {
 public:
-    string convert(string s, int numRows) {
-        int numCols = 0, len = s.length(), tmpLen = len, colsIterator;
-        while (tmpLen > 0) {
-            numCols++;
-            tmpLen -= numRows;
-            if (tmpLen <= 0)
-                break;
-            colsIterator = numRows - 2;
-            while (colsIterator-- && tmpLen--)
-                numCols++;
-        }
-        vector<vector<char>> zigzag(numRows, vector<char>(numCols, ' '));
-        int j = 0, counter = 0, i;
-        while (counter < len) {
-            for (i = 0; i < numRows && counter < len; i++) {
-                zigzag[i][j] = s[counter++];
-            }
-            i = numRows - 2;
-            j++;
-            while (counter < len && i > 0) {
-                zigzag[i][j] = s[counter++];
-                i--; j++;
-            }
+    string convert(const string& s, int numRows) {
+        if (numRows == 1 || numRows >= s.length())
+            return s;        
+        vector<string> rows(numRows);
+        int currRow = 0;
+        bool goingDown = false;
+        for (char c:s) {
+            rows[currRow] += c;
+            if (currRow == 0 || currRow == numRows - 1)
+                goingDown = !goingDown;
+            currRow += goingDown ? 1 : -1;
         }
         string res;
-        for (i = 0; i < numRows; i++)
-            for (j = 0; j < numCols; j++)
-                if (zigzag[i][j] != ' ')
-                    res += zigzag[i][j];
+        for (const string& str:rows)
+            res += str;
         return res;
     }
 };
