@@ -2,9 +2,9 @@ class Solution {
 private:
     int m, n;
     bool isLive(vector<vector<int>>& board, int i, int j) {
-        return i >= 0 && i < m && j >= 0 && j < n && board[i][j];
+        return i >= 0 && i < m && j >= 0 && j < n && (board[i][j] == 1 || board[i][j] == -1);
     }
-    int getNewValOf(vector<vector<int>>& board, int i, int j) {
+    void updateValOf(vector<vector<int>>& board, int i, int j) {
         int liveNeighbors = 0;
         int directions[8][2] = {{-1, -1}, {-1, 0}, {-1, 1},
                                 {0, -1}, {0, 1},
@@ -15,24 +15,25 @@ private:
                 liveNeighbors++;
         }
         if (board[i][j]) {
-            return liveNeighbors == 2 || liveNeighbors == 3;
+            if (liveNeighbors < 2 || liveNeighbors > 3)
+                board[i][j] = -1;
         }
-        return liveNeighbors == 3;
+        else if (liveNeighbors == 3)
+                board[i][j] = 2;
     }
 public:
     void gameOfLife(vector<vector<int>>& board) {
         m = board.size(), n = board[0].size();
-        vector<int> prevRow(n, 0), curRow(n, 0);
-        curRow = board[0];
 
-        for (int i = 0; i < m; i++) {
-            prevRow = curRow;
-            curRow = board[i];
+        for (int i = 0; i < m; i++)
             for (int j = 0; j < n; j++)
-                curRow[j] = getNewValOf(board, i, j);
-            if (i)
-                board[i - 1] = prevRow;
-        }
-        board[m - 1] = curRow;
+                updateValOf(board, i, j);
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == -1)
+                    board[i][j] = 0;
+                else if (board[i][j] == 2)
+                    board[i][j] = 1;
+            }
     }
 };
