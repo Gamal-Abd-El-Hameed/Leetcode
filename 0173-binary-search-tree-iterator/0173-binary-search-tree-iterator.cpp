@@ -1,26 +1,25 @@
 class BSTIterator {
-    priority_queue<int, vector<int>, greater<>> q;
+private:
+    vector<int> v;
+    void inorder(TreeNode* root) {
+        if (!root)
+            return;
+        inorder(root->right);
+        v.push_back(root->val);
+        inorder(root->left);
+    }
 public:
     BSTIterator(TreeNode* root) {
-        queue<TreeNode*> tempQ;
-        tempQ.push(root);
-        while (!tempQ.empty()) {
-            auto* curr = tempQ.front(); tempQ.pop();
-            q.push(curr->val);
-            if (curr->left)
-                tempQ.push(curr->left);
-            if (curr->right)
-                tempQ.push(curr->right);
-        }
+        inorder(root);
     }
 
     int next() {
-        int val = q.top();
-        q.pop();
+        int val = v.back();
+        v.pop_back();
         return val;
     }
 
     bool hasNext() {
-        return !q.empty();
+        return !v.empty();
     }
 };
