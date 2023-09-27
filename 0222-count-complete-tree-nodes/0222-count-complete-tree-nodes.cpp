@@ -1,16 +1,20 @@
 class Solution {
-private:
-    void inorder(TreeNode* root, int &size) {
-        if (!root)
-            return;
-        size++;
-        inorder(root->left, size);
-        inorder(root->right, size);
-    }
 public:
     int countNodes(TreeNode* root) {
-        int size = 0;
-        inorder(root, size);
-        return size;
+        if (!root)
+            return 0;
+        int leftHeight = 0, rightHeight = 0;
+        TreeNode *leftNode = root, *rightNode = root;
+        while (leftNode) {
+            leftHeight++;
+            leftNode = leftNode->left;
+        }
+        while (rightNode) {
+            rightHeight++;
+            rightNode = rightNode->right;
+        }
+        if (leftHeight == rightHeight)
+            return (1 << leftHeight) - 1;
+        return 1 + countNodes(root->left) + countNodes(root->right);
     }
 };
