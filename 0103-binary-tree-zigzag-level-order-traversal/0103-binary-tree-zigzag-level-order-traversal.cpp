@@ -8,12 +8,12 @@ public:
         vector<vector<int>> res;
         bool rightToLeft = false;
         while (!q.empty()) {
-            vector<int> levelValues;
             int levelSize = q.size();
+            vector<int> levelValues(levelSize);
             TreeNode* node;
             for (int i = 0; i < levelSize; i++) {
                 node = q.front(); q.pop();
-                levelValues.push_back(node->val);
+                levelValues[i] = node->val;
                 if (node->left)
                     q.push(node->left);
                 if (node->right)
