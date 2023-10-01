@@ -10,23 +10,20 @@ public:
             prerequisiteToCourses[prerequisite].push_back(course);
         }
 
-        vector<int> schedule(numCourses);
-        for (int scheduleCounter = 0; scheduleCounter < numCourses; scheduleCounter++) {
-            bool found = false;
-            for (int course = 0; course < numCourses; course++) {
-                auto &coursePrerequisites = outEdges[course];
-                if (coursePrerequisites == 0) {
-                    schedule[scheduleCounter] = course;
-                    for (auto const &neighbor:prerequisiteToCourses[course])
-                        outEdges[neighbor]--;
-                    coursePrerequisites = -1;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-                return {};
+        vector<int> schedule;
+        queue<int> q;
+        for (int course = 0; course < numCourses; course++)
+            if (outEdges[course] == 0)
+                q.push(course);
+        while (!q.empty()) {
+            int course = q.front(); q.pop();
+            schedule.push_back(course);
+            for (auto const &neighbor: prerequisiteToCourses[course])
+                if (--outEdges[neighbor] == 0)
+                    q.push(neighbor);
         }
-        return schedule;
+        if (schedule.size() == numCourses)
+            return schedule;
+        return {};
     }
 };
