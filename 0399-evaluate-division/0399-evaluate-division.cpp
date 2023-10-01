@@ -1,51 +1,41 @@
 class Solution {
-private:
-    void getValue(unordered_map<string, vector<pair<string, double>>> &equationsMap, unordered_set<string> &visited,
-                  const string &firstOperand, const string &secondOperand, double &queryResult, bool &found) {
-        if (equationsMap.find(firstOperand) == equationsMap.end()
-        ||  equationsMap.find(secondOperand) == equationsMap.end()
-        ||  visited.find(firstOperand) != visited.end())
-            return;
-        visited.insert(firstOperand);
-        if (firstOperand == secondOperand) {
-            found = true;
-            return;
-        }
-        auto const& equationNeighbors = equationsMap[firstOperand];
-        for (const auto& pair:equationNeighbors) {
-            if (pair.first == secondOperand) {
-                queryResult *= pair.second;
-                found = true;
-                return;
-            }
-        }
-        for (const auto& pair:equationNeighbors) {
-            queryResult *= pair.second;
-            getValue(equationsMap, visited, pair.first, secondOperand, queryResult, found);
-            if (found)
-                break;
-            queryResult /= pair.second;
-        }
-    }
 public:
     vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
-        unordered_map<string, vector<pair<string, double>>> equationsMap;
-        for (int equationsCounter = 0; equationsCounter < equations.size(); equationsCounter++) {
-            auto const& equation = equations[equationsCounter];
-            double value = values[equationsCounter];
-            equationsMap[equation[0]].emplace_back(equation[1], value);
-            equationsMap[equation[1]].emplace_back(equation[0], 1.0 / value);
+        unordered_map<string, unordered_map<string, double>> graph;
+        for (int i = 0; i < equations.size(); i++) {
+            auto const &equation = equations[i];
+            const string &a = equation[0];
+            const string &b = equation[1];
+            double value = values[i];
+            graph[a][b] = value;
+            graph[b][a] = 1 / value;
         }
+        function<double(const string&, const string&)> dfs = [&](const string& start, const string& end) {
+            if (!graph.count(start) || !graph.count(end))
+                return -1.0;
+            if (start == end)
+                return 1.0;
+            unordered_set<string> visited;
+            stack<pair<string, double>> s;
+            s.emplace(start, 1.0);
+            while (!s.empty()) {
+                auto [current, currentRes] = s.top(); s.pop();
+                if (current == end)
+                    return currentRes;
+                visited.insert(current);
+                for (auto const &neighbor:graph[current]) {
+                    const string &next = neighbor.first;
+                    double edgeWeight = neighbor.second;
+                    if (!visited.count(next))
+                        s.emplace(next, edgeWeight * currentRes);
+                }
+            }
+            return -1.0;
+        };
         vector<double> res(queries.size());
-        int queryCounter = 0;
-        unordered_set<string> visited;
-        for (auto const& query:queries) {
-            double queryResult = 1.0;
-            bool found = false;
-            visited.clear();
-            getValue(equationsMap, visited, query[0], query[1], queryResult, found);
-            res[queryCounter++] = found ? queryResult : -1;
-        }
+        int i = 0;
+        for (auto const &query:queries)
+            res[i++] = dfs(query[0], query[1]);
         return res;
     }
 };
