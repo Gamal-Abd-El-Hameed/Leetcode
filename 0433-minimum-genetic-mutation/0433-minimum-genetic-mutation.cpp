@@ -13,7 +13,6 @@ private:
     }
 public:
     int minMutation(string startGene, string endGene, vector<string>& bank) {
-        int mutations = INT_MAX;
         queue<pair<string, int>> q;
         q.emplace(startGene, 0);
         unordered_set<string> visited;
@@ -21,7 +20,7 @@ public:
             auto [currGene, currMutations] = q.front(); q.pop();
             visited.insert(currGene);
             if (currGene == endGene) {
-                mutations = min(mutations, currMutations);
+                return currMutations;
             }
             for (auto const &nextGene:bank) {
                 if (visited.count(nextGene) == 0 && canTwoGenesMutate(currGene, nextGene)) {
@@ -29,6 +28,6 @@ public:
                 }
             }
         }
-        return mutations == INT_MAX ? -1 : mutations;
+        return -1;
     }
 };
