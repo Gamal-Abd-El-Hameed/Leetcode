@@ -1,60 +1,56 @@
 class Solution {
-private:
-    ListNode* merge(ListNode* head, ListNode* afterMid) {
-        if (!head)
-            return afterMid;
-        if (!afterMid)
-            return head;
-        auto *left = head, *right = afterMid, *res = new ListNode, *ans = res;
-        while (left && right) {
-            if (left->val <= right->val) {
-                res->next = left;
-                left = left->next;
-            }
-            else {
-                res->next = right;
-                right = right->next;
-            }
-            res = res->next;
+public:
+    ListNode* sortList(ListNode* head) {
+        if (!head || !head->next) {
+            return head; // Base case: If the list is empty or has only one node, it is already sorted.
         }
-        while (left) {
-            res->next = left;
-            left = left->next;
-            res = res->next;
-        }
-        while (right) {
-            res->next = right;
-            right = right->next;
-            res = res->next;
-        }
-        return ans->next;
-    }
-    ListNode* getMid(ListNode* head) {
-        auto *slow = head, *fast = head, *mid = head;
+
+        // Find the middle of the list using slow and fast pointers
+        ListNode* slow = head;
+        ListNode* fast = head;
+        ListNode* prev = nullptr;
+
         while (fast && fast->next) {
-            mid = slow;
+            prev = slow;
             slow = slow->next;
             fast = fast->next->next;
         }
-        return mid;
-    }
-    ListNode* sortList(ListNode* head, ListNode* tail) {
-        if (head == tail)
-            return head;
-        auto* mid = getMid(head);
-        auto* afterMid = mid->next;
-        mid->next = nullptr;
-        auto* left = sortList(head, mid);
-        auto* right = sortList(afterMid, tail);
+
+        // Split the list into two halves
+        prev->next = nullptr;
+
+        // Recursively sort each half
+        ListNode* left = sortList(head);
+        ListNode* right = sortList(slow);
+
+        // Merge the sorted halves
         return merge(left, right);
     }
-public:
-    ListNode* sortList(ListNode* head) {
-        if (!head)
-            return head;
-        auto *tail = head;
-        while (tail->next)
-            tail = tail->next;
-        return sortList(head, tail);
+
+    // Merge two sorted linked lists
+    ListNode* merge(ListNode* left, ListNode* right) {
+        ListNode dummy(0);
+        ListNode* current = &dummy;
+
+        while (left && right) {
+            if (left->val < right->val) {
+                current->next = left;
+                left = left->next;
+            } else {
+                current->next = right;
+                right = right->next;
+            }
+            current = current->next;
+        }
+
+        if (left) {
+            current->next = left;
+        }
+
+        if (right) {
+            current->next = right;
+        }
+
+        return dummy.next;
     }
 };
